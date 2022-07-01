@@ -1,11 +1,11 @@
 import time as t
 from _thread import *
-from game import Game
-from chat import Chat
+from .game import Game
+from .chat import Chat
 
 
 class Round(object):
-    def __init__(self, word, player_drawing, players):
+    def __init__(self, word, player_drawing, players, game):
         """
         init object
         :param word: str
@@ -47,6 +47,24 @@ class Round(object):
 
         return wrd == self.word
 
+    def get_scores(self):
+        """
+
+        :return: all the player score
+        """
+        return self.scores()
+
+    def get_score(self,player):
+        """
+        Gets a specific player scores
+        :param player: Player
+        :return: player's score
+        """
+        if player in self.player_scores:
+            return self.player_scores[player]
+        else:
+            raise Exception("player does not exist in score list")
+
     def player_left(self, player):
         """
         remove players that left from scores and list
@@ -65,3 +83,14 @@ class Round(object):
     def end_round(self, msg):
         # TODO implement end_round functionality here
         pass
+
+    def skip(self):
+        """
+        Returns true if round skipped threshold met
+        :return:bool
+        """
+        self.skips +=1
+        if self.skips > len(self.player)-2:
+            self.skips = 0
+            return True
+        return False
